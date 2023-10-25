@@ -23,6 +23,8 @@ tf2::Quaternion q_orig, q_rot, q_new;
 
 double yaw_end, yaw_current, junk;
 int state = 0;
+int flag = 2;
+
 
 // Tip: Start by reading the main() function first to better understand everything
 void run()
@@ -132,7 +134,10 @@ void callback(const nav_msgs::Odometry msg)
     // Write the current pose of the robot from the message to p_current
     p_current = msg.pose.pose;
 
-    run();
+    if (flag==0){
+        ROS_INFO_STREAM("Using odom information");
+        run();
+    }
 }
 
 
@@ -141,7 +146,12 @@ void callback2(const nav_msgs::Odometry msg)
     // Write the current pose of the robot from the message to p_current
     p_current = msg.pose.pose;
 
-    run();
+
+    if (flag==1){
+
+        ROS_INFO_STREAM("Using ground truth information");
+        run();
+    }
 }
 
 void callback3(const geometry_msgs::PoseWithCovarianceStamped msg)
@@ -149,7 +159,12 @@ void callback3(const geometry_msgs::PoseWithCovarianceStamped msg)
     // Write the current pose of the robot from the message to p_current
     p_current = msg.pose.pose;
 
-    run();
+
+    if (flag==2){
+
+        ROS_INFO_STREAM("Using AMCL information");
+        run();
+    }
 }
 
 
@@ -162,7 +177,7 @@ int main(int argc, char **argv)
 
     NodeHandle n;
     Rate loop_rate(5);
-    int flag = 0;
+
 
     // In the following section the publisher and subscriber is set
     // To find out which one to use, enter "rostopic list" in the command line
@@ -174,20 +189,18 @@ int main(int argc, char **argv)
     
     // case 0:
     // // {
-    //     Subscriber s = n.subscribe("/mobile_base_controller/odom", 1, callback);
-    //     ROS_INFO_STREAM("Using odom information");
+        Subscriber s = n.subscribe("/mobile_base_controller/odom", 1, callback);
+
     //     // break;
     // }
     // case 1:
     // // {
-    //     Subscriber s2 = n.subscribe("/ground_truth",1,callback2);
-    //     ROS_INFO_STREAM("Using ground truth information");
+        Subscriber s2 = n.subscribe("/ground_truth",1,callback2);
     //     break;
     // }
     // case 2:
     // {
         Subscriber s3 = n.subscribe("/amcl_pose",1,callback3);
-        ROS_INFO_STREAM("Using AMCL information");
     //     break;
     // }
 
