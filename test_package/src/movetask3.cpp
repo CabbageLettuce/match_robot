@@ -2,6 +2,7 @@
 #include "nav_msgs/Odometry.h"
 #include "geometry_msgs/Pose.h"
 #include "geometry_msgs/Twist.h"
+#include "geometry_msgs/PoseWithCovarianceStamped.h"
 #include <tf2/LinearMath/Quaternion.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
@@ -89,7 +90,7 @@ void run()
 
 
  
-                if (abs(yaw_current - yaw_end) <0.005){
+                if (abs(yaw_current - yaw_end) <0.1){
                     twist.angular.z = 0;
                     twist.linear.x = -0.0;
                     state = 3;
@@ -135,6 +136,23 @@ void callback(const nav_msgs::Odometry msg)
 }
 
 
+void callback2(const nav_msgs::Odometry msg)
+{
+    // Write the current pose of the robot from the message to p_current
+    p_current = msg.pose.pose;
+
+    run();
+}
+
+void callback3(const geometry_msgs::PoseWithCovarianceStamped msg)
+{
+    // Write the current pose of the robot from the message to p_current
+    p_current = msg.pose.pose;
+
+    run();
+}
+
+
 
 int main(int argc, char **argv)
 {
@@ -144,12 +162,39 @@ int main(int argc, char **argv)
 
     NodeHandle n;
     Rate loop_rate(5);
+    int flag = 0;
 
     // In the following section the publisher and subscriber is set
     // To find out which one to use, enter "rostopic list" in the command line
     // Use "rostopic type <topic>" to see the data type of a topic.
     p = n.advertise<geometry_msgs::Twist>("/mobile_base_controller/cmd_vel", 1000);
-    Subscriber s = n.subscribe("/mobile_base_controller/odom", 1, callback);
+
+    // switch(flag)
+    // {
+    
+    // case 0:
+    // // {
+    //     Subscriber s = n.subscribe("/mobile_base_controller/odom", 1, callback);
+    //     ROS_INFO_STREAM("Using odom information");
+    //     // break;
+    // }
+    // case 1:
+    // // {
+    //     Subscriber s2 = n.subscribe("/ground_truth",1,callback2);
+    //     ROS_INFO_STREAM("Using ground truth information");
+    //     break;
+    // }
+    // case 2:
+    // {
+        Subscriber s3 = n.subscribe("/amcl_pose",1,callback3);
+        ROS_INFO_STREAM("Using AMCL information");
+    //     break;
+    // }
+
+
+ 
+    // }
+
 
     // Important: Don't use spinOnce() because you want a continuous Subscriber
     spin();

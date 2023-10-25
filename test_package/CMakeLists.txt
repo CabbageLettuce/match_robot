@@ -119,8 +119,10 @@ ${catkin_INCLUDE_DIRS}
 
 add_executable(movetask1 src/movetask1.cpp)
 add_executable(movetask2 src/movetask2.cpp)
+add_executable(movetask3 src/movetask3.cpp)
 target_link_libraries(movetask1 ${catkin_LIBRARIES})
 target_link_libraries(movetask2 ${catkin_LIBRARIES})
+target_link_libraries(movetask3 ${catkin_LIBRARIES})
 
 
 ## Declare a C++ library
