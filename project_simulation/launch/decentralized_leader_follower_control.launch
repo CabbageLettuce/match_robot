@@ -1,5 +1,6 @@
 <?xml version="1.0" ?>
 <launch>
+    <arg name="tf_prefix" default="tf_prefix"/>
     <arg name="leader_pose_topic" default='/virtual_leader/leader_pose'/>
     <arg name="leader_velocity_topic" default='/virtual_leader/leader_vel'/>
     <arg name="actual_pose_topic" default='/mir_pose_stamped_simple'/>
@@ -15,6 +16,7 @@
         <param name="leader_velocity_topic" value="$(arg leader_velocity_topic)"/>
         <param name="actual_pose_topic" value="$(arg actual_pose_topic)"/>
         <param name="follower_cmd_vel_topic" value="$(arg follower_cmd_vel_topic)"/>
+                <param name="tf_prefix" value="$(arg tf_prefix)"/>
 	</node>
 
 </launch>

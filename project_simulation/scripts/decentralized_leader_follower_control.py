@@ -8,6 +8,7 @@ from nav_msgs.msg import Odometry
 from tf import transformations, broadcaster
 import math
 
+
 class DecentralizedLeaderFollowerController:
     
     def __init__(self) -> None:
@@ -33,6 +34,7 @@ class DecentralizedLeaderFollowerController:
         self.lin_vel_max = rospy.get_param("~lin_vel_max", 0.2)
         self.ang_vel_max = rospy.get_param("~ang_vel_max", 0.3)
         rospy.loginfo("lin_vel_max %f",self.lin_vel_max)
+        rospy.loginfo("arg_vel_max %f",self.ang_vel_max)
         rospy.loginfo("self.Kpx %f",self.Kp_x)
         rospy.loginfo("relative_position %f,%f,%f",self.relative_position[0],self.relative_position[1],self.relative_position[2])
         
@@ -42,6 +44,9 @@ class DecentralizedLeaderFollowerController:
         # wait for target pose, actual pose and target velocity
         rospy.wait_for_message(self.leader_pose_topic, PoseStamped)
         rospy.wait_for_message(self.actual_pose_topic, PoseStamped)
+
+
+        
         rospy.wait_for_message(self.leader_velocity_topic, Twist)
         
         rate = rospy.Rate(self.control_rate)
@@ -54,10 +59,10 @@ class DecentralizedLeaderFollowerController:
                 rospy.loginfo("Waiting for target pose, actual pose and target velocity")
             
             # limit the velocities
-            if abs(u_v) > self.lin_vel_max:
-                u_v = self.lin_vel_max * u_v/abs(u_v)
-            if abs(u_w) > self.ang_vel_max:
-                u_w = self.ang_vel_max * u_w/abs(u_w)
+            # if abs(u_v) > self.lin_vel_max:
+            #     u_v = self.lin_vel_max * u_v/abs(u_v)
+            # if abs(u_w) > self.ang_vel_max:
+            #     u_w = self.ang_vel_max * u_w/abs(u_w)
             
             self.cmd_vel_output.linear.x = u_v
             self.cmd_vel_output.angular.z = u_w
@@ -125,6 +130,9 @@ class DecentralizedLeaderFollowerController:
             u_v = target_velocity.linear.x * math.cos(e_phi) + self.Kp_x*e_local_x
             u_w = target_velocity.angular.z + u_v * ( self.Kp_y * e_local_y + self.Kp_phi * math.sin(e_phi))
             
+            # rospy.loginfo("lin_vel %f",u_v)
+            # rospy.loginfo("arg_vel %f",u_w)
+
             # publish metadata
             # self.metadata_publisher.publish_controller_metadata(target_pose = target_pose, actual_pose = actual_pose, target_velocity = target_velocity, publish = True,
             # error = [e_local_x,e_local_y,phi_target[2]-phi_act[2]], robot_id = i) 
@@ -140,6 +148,8 @@ class DecentralizedLeaderFollowerController:
     def target_velocity_callback(self, msg):
         self.target_velocity = msg
         
+ 
+
         
 if __name__ == '__main__':
     try:
