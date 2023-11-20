@@ -50,7 +50,7 @@
 	<param name="cmd_vel" value="$(arg robot1_name)/mobile_base_controller/cmd_vel"/>
 </node> -->
   
-  <node type="rviz" name="rviz" pkg="rviz" args="-d $(find mir_examples)/rviz/formation_path_planning_visualization.rviz" /><!--2D Navigation-->
+  <!-- <node type="rviz" name="rviz" pkg="rviz" args="-d $(find mir_examples)/rviz/formation_path_planning_visualization.rviz" />2D Navigation -->
 
   <include file="$(find project_simulation)/launch/decentralized_leader_follower_control.launch">
     <arg name="node_name" value="$(arg robot2_name)_"/>

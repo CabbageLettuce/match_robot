@@ -32,10 +32,6 @@ class DecentralizedLeaderFollowerController:
         self.relative_position = rospy.get_param("~relative_position", [0.0,0.0,0.0])
         self.lin_vel_max = rospy.get_param("~lin_vel_max", 0.2)
         self.ang_vel_max = rospy.get_param("~ang_vel_max", 0.3)
-        rospy.loginfo("lin_vel_max %f",self.lin_vel_max)
-        rospy.loginfo("self.Kpx %f",self.Kp_x)
-        rospy.loginfo("relative_position %f,%f,%f",self.relative_position[0],self.relative_position[1],self.relative_position[2])
-        
 
     def run(self):
         
@@ -78,7 +74,7 @@ class DecentralizedLeaderFollowerController:
         target_velocity = self.target_velocity
         r = math.sqrt(self.relative_position[0]**2 + self.relative_position[1]**2)
         target_velocity.linear.x = self.target_velocity.linear.x + r*self.target_velocity.angular.z  # todo: check if this is correct
-        # target_velocity.linear.x = 0
+        
         u_v, u_w = self.cartesian_controller(self.actual_pose, target_pose, target_velocity)
         return u_v, u_w        
     

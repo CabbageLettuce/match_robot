@@ -1,4 +1,4 @@
-decentralized_leader_follower_control:
+mir2_decentralized_leader_follower_control:
   Kp_x : 2.5
   Kp_y : 1.0
   Kp_phi : 0.5

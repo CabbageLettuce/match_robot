@@ -7,7 +7,7 @@
     <arg name="relative_position" default="[0.0, 1.0, 0.0]"/>
     <arg name="node_name" default=""/>
 
-    <rosparam file="$(find project_simulation)/config/decentralized_leader_follower_control.yaml" command="load" subst_value="true"/>
+    <rosparam file="$(find project_simulation)/config/$(arg node_name)decentralized_leader_follower_control.yaml" command="load" subst_value="true"/>
 
 	<node name="$(arg node_name)decentralized_leader_follower_control" pkg="project_simulation" type="decentralized_leader_follower_control.py" output="screen">
 		<rosparam param="relative_position" subst_value="True">$(arg relative_position) </rosparam>
